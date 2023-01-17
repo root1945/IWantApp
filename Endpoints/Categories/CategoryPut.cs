@@ -16,10 +16,11 @@ public class CategoryPut
         {
             return Results.NotFound();
         }
-        category.Name = categoryRequest.Name;
-        category.Active = categoryRequest.Active;
-        category.ModifiedBy = "Developer";
-        category.ModifiedOn = DateTime.UtcNow;
+        category.EditInfo(categoryRequest.Name, categoryRequest.Active, "Developer");
+        if (!category.IsValid)
+        {
+            return Results.ValidationProblem(category.Notifications.ConvertToProblemDetails());
+        }
         context.SaveChanges();
         return Results.Ok();
     }
